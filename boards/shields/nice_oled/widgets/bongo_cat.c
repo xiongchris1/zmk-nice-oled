@@ -135,8 +135,8 @@ const lv_img_dsc_t mar = {
   .header.cf = LV_IMG_CF_INDEXED_1BIT,
   .header.always_zero = 0,
   .header.reserved = 0,
-  .header.w = 32,
-  .header.h = 80,
+  .header.w = 80,
+  .header.h = 32,
   .data_size = sizeof(mar_map),
   .data = mar_map,
 };
