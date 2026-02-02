@@ -44,7 +44,7 @@ const lv_img_dsc_t *5_output_images_rotate_flip_images[17] = {
 */
 
 
-const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_LARGE_CONST LV_ATTRIBUTE_IMG_MARSMALL uint8_t mar_map[] = {
+const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_LARGE_CONST uint8_t mar_map[] = {
   0x00, 0x00, 0x00, 0x00, 	/*Color of index 0*/
   0x60, 0x63, 0x64, 0xf8, 	/*Color of index 1*/
   0x93, 0x96, 0x92, 0x25, 	/*Color of index 2*/
