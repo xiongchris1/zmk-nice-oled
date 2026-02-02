@@ -97,7 +97,6 @@ enum anim_state {
 } current_anim_state;
 
 static void set_animation(lv_obj_t *animing, struct wpm_bongo_cat_status_state state) {
-    if (state.wpm < 5) {
         if (current_anim_state != anim_state_idle) {
             lv_animimg_set_src(animing, SRC(idle_imgs));
             lv_animimg_set_duration(animing, ANIMATION_SPEED_IDLE);
@@ -105,32 +104,7 @@ static void set_animation(lv_obj_t *animing, struct wpm_bongo_cat_status_state s
             lv_animimg_start(animing);
             current_anim_state = anim_state_idle;
         }
-    } else if (state.wpm < 30) {
-        if (current_anim_state != anim_state_slow) {
-            lv_animimg_set_src(animing, SRC(slow_imgs));
-            lv_animimg_set_duration(animing, ANIMATION_SPEED_SLOW);
-            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
-            lv_animimg_start(animing);
-            current_anim_state = anim_state_slow;
-        }
-    } else if (state.wpm < 70) {
-        if (current_anim_state != anim_state_mid) {
-            lv_animimg_set_src(animing, SRC(mid_imgs));
-            lv_animimg_set_duration(animing, ANIMATION_SPEED_MID);
-            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
-            lv_animimg_start(animing);
-            current_anim_state = anim_state_mid;
-        }
-    } else {
-        if (current_anim_state != anim_state_fast) {
-            lv_animimg_set_src(animing, SRC(fast_imgs));
-            lv_animimg_set_duration(animing, ANIMATION_SPEED_FAST);
-            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
-            lv_animimg_start(animing);
-            current_anim_state = anim_state_fast;
-        }
     }
-}
 
 struct wpm_bongo_cat_status_state wpm_bongo_cat_status_get_state(const zmk_event_t *eh) {
     struct zmk_wpm_state_changed *ev = as_zmk_wpm_state_changed(eh);
