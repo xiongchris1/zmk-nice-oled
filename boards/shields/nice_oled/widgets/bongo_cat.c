@@ -339,7 +339,7 @@ LV_IMG_DECLARE(bongo_cat_tap2_04);
 const lv_img_dsc_t *idle_imgs[] = {
     &mar,
 };
-#&bongo_cat_double_tap1_06
+//&bongo_cat_double_tap1_06
 
 #define ANIMATION_SPEED_SLOW 2000
 const lv_img_dsc_t *slow_imgs[] = {
