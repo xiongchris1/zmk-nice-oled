@@ -20,26 +20,8 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #define SRC(array) (const void **)array, sizeof(array) / sizeof(lv_img_dsc_t *)
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
-const lv_img_dsc_t *5_output_images_rotate_flip_images[17] = {
-    &bongo_cat_double_tap1_01,
-    &bongo_cat_double_tap1_02,
-    &bongo_cat_double_tap1_03,
-    &bongo_cat_double_tap1_04,
-    &bongo_cat_double_tap1_05,
-    &bongo_cat_double_tap1_06,
-    &bongo_cat_double_tap2_01,
-    &bongo_cat_double_tap2_02,
-    &bongo_cat_double_tap2_03,
-    &bongo_cat_tap1_01,
-    &bongo_cat_tap1_02,
-    &bongo_cat_tap1_03,
-    &bongo_cat_tap1_04,
-    &bongo_cat_tap2_01,
-    &bongo_cat_tap2_02,
-    &bongo_cat_tap2_03,
-    &bongo_cat_tap2_04
-};
 
+// 1. DECLARE IMAGES FIRST (Before using them in arrays)
 LV_IMG_DECLARE(bongo_cat_double_tap1_01);
 LV_IMG_DECLARE(bongo_cat_double_tap1_02);
 LV_IMG_DECLARE(bongo_cat_double_tap1_03);
@@ -58,11 +40,11 @@ LV_IMG_DECLARE(bongo_cat_tap2_02);
 LV_IMG_DECLARE(bongo_cat_tap2_03);
 LV_IMG_DECLARE(bongo_cat_tap2_04);
 
+// 2. ANIMATION ARRAYS (Removed the illegal 5_output_images array)
 #define ANIMATION_SPEED_IDLE 10000
 const lv_img_dsc_t *idle_imgs[] = {
     &bongo_cat_double_tap1_06
 };
-//&bongo_cat_double_tap1_06
 
 #define ANIMATION_SPEED_SLOW 2000
 const lv_img_dsc_t *slow_imgs[] = {
@@ -94,7 +76,33 @@ enum anim_state {
     anim_state_fast
 } current_anim_state;
 
+// 3. FIXED WPM LOGIC (The cat will actually move now based on typing speed)
 static void set_animation(lv_obj_t *animing, struct wpm_bongo_cat_status_state state) {
+    if (state.wpm >= 60) {
+        if (current_anim_state != anim_state_fast) {
+            lv_animimg_set_src(animing, SRC(fast_imgs));
+            lv_animimg_set_duration(animing, ANIMATION_SPEED_FAST);
+            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
+            lv_animimg_start(animing);
+            current_anim_state = anim_state_fast;
+        }
+    } else if (state.wpm >= 30) {
+        if (current_anim_state != anim_state_mid) {
+            lv_animimg_set_src(animing, SRC(mid_imgs));
+            lv_animimg_set_duration(animing, ANIMATION_SPEED_MID);
+            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
+            lv_animimg_start(animing);
+            current_anim_state = anim_state_mid;
+        }
+    } else if (state.wpm >= 5) {
+        if (current_anim_state != anim_state_slow) {
+            lv_animimg_set_src(animing, SRC(slow_imgs));
+            lv_animimg_set_duration(animing, ANIMATION_SPEED_SLOW);
+            lv_animimg_set_repeat_count(animing, LV_ANIM_REPEAT_INFINITE);
+            lv_animimg_start(animing);
+            current_anim_state = anim_state_slow;
+        }
+    } else {
         if (current_anim_state != anim_state_idle) {
             lv_animimg_set_src(animing, SRC(idle_imgs));
             lv_animimg_set_duration(animing, ANIMATION_SPEED_IDLE);
@@ -103,6 +111,7 @@ static void set_animation(lv_obj_t *animing, struct wpm_bongo_cat_status_state s
             current_anim_state = anim_state_idle;
         }
     }
+}
 
 struct wpm_bongo_cat_status_state wpm_bongo_cat_status_get_state(const zmk_event_t *eh) {
     struct zmk_wpm_state_changed *ev = as_zmk_wpm_state_changed(eh);
